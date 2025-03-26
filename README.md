@@ -35,3 +35,25 @@ If you would like to sign the pledge, please submit a pull request with your nam
 * [Radiopedia](radiopedia_ultrasound_2d/README.md) - Licence: [CC BY-NC-SA 3.0](radiopedia_ultrasound_2d/LICENSE)
 * [Hong Kong Polytechnic University](hong_kong_poly_ultrasound_2d/README.md) - Licence: [Apache V2](hong_kong_poly_ultrasound_2d/LICENSE)
 * [University of Jordan](https://data.mendeley.com/datasets/jf3pv98m9g/2)
+
+
+# Citation
+
+If you use this dataset in your research, please cite the following:
+
+```
+@misc{openhipdysplasia,
+  author = {Adam McArthur and Jacob L. Jaremko and Abhilash Hareendranathan and Stephen Burnside and Andrew Kirby and Alexander Scammon and Damian Sol},
+  title = {The Open Hip Dysplasia Dataset},
+  year = {2025},
+  howpublished = {\url{https://github.com/radoss-org/open-hip-dysplasia}},
+  note = {Adam McArthur: University of Alberta;
+          Jacob L. Jaremko: University of Alberta;
+          Abhilash Hareendranathan: University of Alberta;
+          Stephen Burnside: University of Alberta;
+          Andrew Kirby: NHS Lothian;
+          Alexander Scammon: Insight Softmax Consulting;
+          Damian Sol: Insight Softmax Consulting;
+          Accessed: [Date of access]}
+}
+```
