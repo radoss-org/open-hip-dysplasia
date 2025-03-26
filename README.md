@@ -1,5 +1,7 @@
 # The Open Hip Dysplasia Dataset
 
+[![DOI](https://zenodo.org/badge/955042700.svg)](https://doi.org/10.5281/zenodo.15086604)
+
 A collection of files from across the Internet to help researchers and developers in the field of hip dysplasia.
 
 <table>
@@ -11,8 +13,8 @@ A collection of files from across the Internet to help researchers and developer
 </table>
 
 Currently, the dataset includes 2D Ultrasound Images from 2 Sources:
-- Radiopedia: with information on Graf Type, Alpha Angle, Coverage and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
-- Hong Kong Polytechnic University: with specific information on scan quality. **Released on [Apache V2](https://www.apache.org/licenses/LICENSE-2.0)**
+- **Radiopedia**: with information on Graf Type, Alpha Angle, Coverage and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
+- **Hong Kong Polytechnic University**: with specific information on scan quality. **Released on [Apache V2](https://www.apache.org/licenses/LICENSE-2.0)**
 
 We also want to highlight an [X-Ray Dataset from the University of Jordan](https://data.mendeley.com/datasets/jf3pv98m9g/2). It contains 354 subjects (120 DDH, 234 normal) on the great unrestrictive [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license. We are working on adding Acetabular Index labels to this dataset.
 
@@ -20,7 +22,7 @@ We also want to highlight an [X-Ray Dataset from the University of Jordan](https
 
 ## The "Open Hip" Pledge
 
-To address the significant scarcity of data for AI-driven advancements in Developmental Dysplasia of the Hip (DDH), we pledge to make the Open Hip Dysplasia Dataset a robust and reliable resource. We will actively contribute new files across various modalities, including X-Ray, 3D, and 2D Sweep Videos, while simultaneously enhancing the quality of current data to maximize its utility for AI training and research. This will guarantee that anyone, regardless of their background, can access the data they need to make a meaningful impact in the field of Hip Dysplasia.
+**_To address the significant scarcity of data for AI-driven advancements in Developmental Dysplasia of the Hip (DDH), we pledge to make the Open Hip Dysplasia Dataset a robust and reliable resource. We will actively contribute new files across various modalities, including X-Ray, 3D, and 2D Sweep Videos, while simultaneously enhancing the quality of current data to maximize its utility for AI training and research. This will guarantee that anyone, regardless of their background, can access the data they need to make a meaningful impact in the field of Hip Dysplasia._**
 
 ### Sign the Pledge
 
@@ -48,6 +50,7 @@ If you use this dataset in your research, please cite the following:
   month = {March},
   year = {2025},
   version = {v1.0},
+  doi = {10.5281/zenodo.15086604},
   url = {https://github.com/radoss-org/open-hip-dysplasia},
   note = {Adam McArthur: University of Alberta;
           Jacob L. Jaremko: University of Alberta;
