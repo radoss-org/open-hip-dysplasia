@@ -42,18 +42,51 @@ If you would like to sign the pledge, please submit a pull request with your nam
 If you use this dataset in your research, please cite the following:
 
 ```
-@misc{openhipdysplasia,
-  author = {Adam McArthur and Jacob L. Jaremko and Abhilash Hareendranathan and Stephen Burnside and Andrew Kirby and Alexander Scammon and Damian Sol},
+@dataset{openhipdysplasia,
+  author = {McArthur, Adam and Jaremko, Jacob L. and Hareendranathan, Abhilash and Burnside, Stephen and Kirby, Andrew and Scammon, Alexander and Sol, Damian},
   title = {The Open Hip Dysplasia Dataset},
+  month = {March},
   year = {2025},
-  howpublished = {\url{https://github.com/radoss-org/open-hip-dysplasia}},
+  version = {v1.0},
+  url = {https://github.com/radoss-org/open-hip-dysplasia},
   note = {Adam McArthur: University of Alberta;
           Jacob L. Jaremko: University of Alberta;
           Abhilash Hareendranathan: University of Alberta;
           Stephen Burnside: University of Alberta;
           Andrew Kirby: NHS Lothian;
           Alexander Scammon: Insight Softmax Consulting;
-          Damian Sol: Insight Softmax Consulting;
-          Accessed: [Date of access]}
+          Damian Sol: Insight Softmax Consulting;}
+}
+
+@article{9449886,
+  author={Liu, Ruhan and Liu, Mengyao and Sheng, Bin and Li, Huating and Li, Ping and Song, Haitao and Zhang, Ping and Jiang, Lixin and Shen, Dinggang},
+  journal={IEEE Transactions on Medical Imaging},
+  title={NHBS-Net: A Feature Fusion Attention Network for Ultrasound Neonatal Hip Bone Segmentation},
+  year={2021},
+  volume={40},
+  number={12},
+  pages={3446-3458},
+  keywords={Image segmentation;Hip;Ultrasonic imaging;Bones;Feature extraction;Standards;Pediatrics;Neonatal hip bone segmentation;self-attention mechanism;medical image segmentation},
+  doi={10.1109/TMI.2021.3087857}
+}
+
+@misc{radiopaedia_ddh_cases,
+  author = {Sheikh, Yusra and Thibodeau, Ryan and Ranchod, Ashesh Ishwarlal and
+            Hisham},
+  title = {Radiopaedia cases of Developmental Dysplasia of the Hip},
+  year = {2023-2024},
+  howpublished = {\url{https://radiopaedia.org/}},
+  note = {Cases: 72628 (Yusra Sheikh), 172535-172536, 172658, 172534, 171555-171556, 172533, 171551, 171553-171554 (Ryan Thibodeau), 167854-167855, 167857 (Ashesh Ishwarlal Ranchod), 56568 (Hisham Alwakkaa); Accessed: [Date of access]}
+}
+
+@dataset{fraiwan_mohammad_2022,
+  author       = {Fraiwan, Mohammad and Al-Kofahi, Noran and Hanatleh, Omar and ibnian, ali},
+  title        = {A dataset of DDH x-ray images},
+  month        = dec,
+  year         = 2022,
+  publisher    = {Mendeley Data},
+  version      = {2},
+  doi          = {10.17632/jf3pv98m9g.2},
+  url          = {https://data.mendeley.com/datasets/jf3pv98m9g/2}
 }
 ```
