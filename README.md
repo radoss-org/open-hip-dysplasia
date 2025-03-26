@@ -1,6 +1,6 @@
 # The Open Hip Dysplasia Dataset
 
-[![DOI](https://zenodo.org/badge/955042700.svg)](https://doi.org/10.5281/zenodo.15086604)
+[![DOI](https://zenodo.org/badge/955042700.svg)](https://doi.org/10.5281/zenodo.15086603)
 
 A collection of files from across the Internet to help researchers and developers in the field of hip dysplasia.
 
@@ -50,7 +50,7 @@ If you use this dataset in your research, please cite the following:
   month = {March},
   year = {2025},
   version = {v1.0},
-  doi = {10.5281/zenodo.15086604},
+  doi = {10.5281/zenodo.15086603},
   url = {https://github.com/radoss-org/open-hip-dysplasia},
   note = {Adam McArthur: University of Alberta;
           Jacob L. Jaremko: University of Alberta;
