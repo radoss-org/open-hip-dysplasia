@@ -1,0 +1,21 @@
+{
+  "rad_id": "167855",
+  "row_data": {
+    "RadID": 167855,
+    "Gender": "M",
+    "Age": "3 Months",
+    "Breech?": NaN,
+    "R Graf Type": "Ib",
+    "L Graf Type": "Ib",
+    "R Alpha Angle": 60,
+    "R Beta Angle": 55.0,
+    "L Alpha Angle": 60,
+    "L Beta Angle": 56.0,
+    "R Coverage": NaN,
+    "L Coverage": NaN,
+    "Notes": NaN,
+    "Confidence": "Diagnosis Certain"
+  },
+  "filename": "167855_3.png",
+  "side": "left"
+}

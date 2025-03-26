@@ -1,0 +1,21 @@
+{
+  "rad_id": "167857",
+  "row_data": {
+    "RadID": 167857,
+    "Gender": "F",
+    "Age": "2 Days",
+    "Breech?": NaN,
+    "R Graf Type": "Ia",
+    "L Graf Type": "Ia",
+    "R Alpha Angle": 61,
+    "R Beta Angle": 53.0,
+    "L Alpha Angle": 62,
+    "L Beta Angle": 53.0,
+    "R Coverage": NaN,
+    "L Coverage": NaN,
+    "Notes": NaN,
+    "Confidence": "Diagnosis Certain"
+  },
+  "filename": "167857_2.png",
+  "side": "right"
+}

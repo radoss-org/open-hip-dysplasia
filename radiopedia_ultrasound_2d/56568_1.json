@@ -1,0 +1,21 @@
+{
+  "rad_id": "56568",
+  "row_data": {
+    "RadID": 56568,
+    "Gender": "F",
+    "Age": "7 Weeks",
+    "Breech?": NaN,
+    "R Graf Type": "IIa",
+    "L Graf Type": "IIa",
+    "R Alpha Angle": 50,
+    "R Beta Angle": NaN,
+    "L Alpha Angle": 55,
+    "L Beta Angle": NaN,
+    "R Coverage": 0.43,
+    "L Coverage": 0.46,
+    "Notes": NaN,
+    "Confidence": "Diagnosis Almost Certain"
+  },
+  "filename": "56568_1.png",
+  "side": "right"
+}

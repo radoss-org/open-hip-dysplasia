@@ -1,0 +1,21 @@
+{
+  "rad_id": "172534",
+  "row_data": {
+    "RadID": 172534,
+    "Gender": "M",
+    "Age": "2 Months",
+    "Breech?": "Y",
+    "R Graf Type": "I",
+    "L Graf Type": "I",
+    "R Alpha Angle": ">60",
+    "R Beta Angle": NaN,
+    "L Alpha Angle": ">60",
+    "L Beta Angle": NaN,
+    "R Coverage": ">0.50",
+    "L Coverage": ">0.50",
+    "Notes": NaN,
+    "Confidence": "Diagnosis not applicable"
+  },
+  "filename": "172534_16.png",
+  "side": "left"
+}

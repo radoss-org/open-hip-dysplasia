@@ -1,0 +1,21 @@
+{
+  "rad_id": "172658",
+  "row_data": {
+    "RadID": 172658,
+    "Gender": "F",
+    "Age": "1 Month",
+    "Breech?": "Y",
+    "R Graf Type": "I",
+    "L Graf Type": "Iia",
+    "R Alpha Angle": ">60",
+    "R Beta Angle": NaN,
+    "L Alpha Angle": "~50",
+    "L Beta Angle": NaN,
+    "R Coverage": ">0.50",
+    "L Coverage": "0.30-0.40",
+    "Notes": "The bony acetabulum (left) displays an\u00a0abnormal sloped morphology.",
+    "Confidence": "Diagnosis Certain"
+  },
+  "filename": "172658_8.png",
+  "side": "right"
+}
