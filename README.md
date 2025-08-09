@@ -6,19 +6,31 @@ A collection of files from across the Internet to help researchers and developer
 
 <table>
   <tr>
-    <td><img src="radiopedia_ultrasound_2d/167854_1.png" alt="DDH Radiopedia" width="300"></td>
-    <td><img src="hong_kong_poly_ultrasound_2d/standard_0.png" alt="DDH Hong Kong PolyU" width="300"></td>
+    <td><img src="radiopedia_ultrasound_2d/data/167854_1.png" alt="DDH Radiopedia" width="300"></td>
+    <td><img src="mtddh_xray_2d/data/dataset1_train_a16.jpg" alt="DDH MTDDH" width="300"></td>
     <td><img src="docs/metadata.png" alt="DDH Radiopedia" width="300"></td>
   </tr>
 </table>
 
-Currently, the dataset includes 2D Ultrasound Images from 2 Sources:
-- **Radiopedia**: with information on Graf Type, Alpha Angle, Coverage and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
+Currently, the dataset includes Hip Images from 3 Sources, with both X-Ray and 2D Ultrasound:
+- **Radiopedia**: with information on Graf Type, Alpha Angle, Coverage, Segmentations and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
 - **Hong Kong Polytechnic University**: with specific information on scan quality. **Released on [Apache V2](https://www.apache.org/licenses/LICENSE-2.0)**
+- **MTDDH**: A 1000+ image dataset of X-Ray images of the hip, with 8 landmarks for Acetabular Index and Wilberg Angle, as well as IHDI & Tonnis Grades. **Released on [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**
 
-We also want to highlight an [X-Ray Dataset from the University of Jordan](https://data.mendeley.com/datasets/jf3pv98m9g/2). It contains 354 subjects (120 DDH, 234 normal) on the great unrestrictive [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license. We are working on adding Acetabular Index labels to this dataset.
+## Data Snapshots
 
-[The NIDUS Lab](https://nidusai.ca) has commited to adding scan quality, Alpha Angle, Coverage and Acetabular Index Labels, with the geometries used to create them, for the Radiopedia and University of Jordan datasets. This will happen as the relavent papers are released, hopefully before the end of Q2 2025.
+We use data snapshots to highlight important features of the datasets. They can be found in the README.md files of each dataset.
+
+![MTDDH X-Ray Data Snapshot](docs/mtddh_snapshot.png)
+![Radiopedia Data Snapshot](docs/radiopedia_snapshot.png)
+
+## Other Datasets
+
+We also want to regognize the work of other labs who have created datasets that are not yet in this collection:
+- [Acetabular-vision hip developmental dysplasia’s (AV-DDH)](https://data.mendeley.com/datasets/4gvcb6gmh2/1): AV-DDH dataset is a comprehensive collection of 2417 raw X-ray images and their corresponding annotated labels for diagnosing developmental dysplasia of the hip (DDH). **Released on [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**
+- [A dataset of DDH x-ray images](https://data.mendeley.com/datasets/jf3pv98m9g/2) - The dataset used in the relevant research article included 354 subjects (120 DDH, 234 normal) . **Released on [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**
+
+[The NIDUS Lab](https://nidusai.ca) has commited to enriching and simplifying Hip Datasets where possible, and adding their own datasets to the collection in the future.
 
 ## The "Open Hip" Pledge
 
@@ -36,7 +48,7 @@ If you would like to sign the pledge, please submit a pull request with your nam
 
 * [Radiopedia](radiopedia_ultrasound_2d/README.md) - Licence: [CC BY-NC-SA 3.0](radiopedia_ultrasound_2d/LICENSE)
 * [Hong Kong Polytechnic University](hong_kong_poly_ultrasound_2d/README.md) - Licence: [Apache V2](hong_kong_poly_ultrasound_2d/LICENSE)
-* [University of Jordan](https://data.mendeley.com/datasets/jf3pv98m9g/2)
+* [MTDDH](mtddh_xray_2d/README.md) - Licence: [CC BY 4.0](mtddh_xray_2d/LICENSE)
 
 
 # Citation
@@ -82,14 +94,14 @@ If you use this dataset in your research, please cite the following:
   note = {Cases: 72628 (Yusra Sheikh), 172535-172536, 172658, 172534, 171555-171556, 172533, 171551, 171553-171554 (Ryan Thibodeau), 167854-167855, 167857 (Ashesh Ishwarlal Ranchod), 56568 (Hisham Alwakkaa); Accessed: [Date of access]}
 }
 
-@dataset{fraiwan_mohammad_2022,
-  author       = {Fraiwan, Mohammad and Al-Kofahi, Noran and Hanatleh, Omar and ibnian, ali},
-  title        = {A dataset of DDH x-ray images},
-  month        = dec,
-  year         = 2022,
-  publisher    = {Mendeley Data},
-  version      = {2},
-  doi          = {10.17632/jf3pv98m9g.2},
-  url          = {https://data.mendeley.com/datasets/jf3pv98m9g/2}
+@misc{ c088644bd0b2406eb49830ad447c17fb,
+  author       = {Guoqiang Qi and Xiongfei Jiao and Jing Li and Chaojin Qin and Xinxin Li and Zhexian Sun and Yonggen Zhao and Renjie Jiang and Zhu Zhu and Guoqiang Zhao and Gang Yu},
+  title        = {{The MTDDH dataset for quality evaluation of pelvic X-ray and diagnosis of developmental dysplasia of the hip}},
+  year         = 2025,
+  month        = apr,
+  publisher    = {Science Data Bank},
+  version      = {V1},
+  doi          = {10.57760/sciencedb.24372},
+  url          = https://doi.org/10.57760/sciencedb.24372
 }
 ```

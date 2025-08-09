@@ -1,0 +1,12 @@
+path: /home/amcarth1/experiments/xray-experiments/
+train: yolo_datasets/MTDDH/images
+val: yolo_datasets/MTDDH/images
+
+# Keypoints
+kpt_shape: [2, 3]
+flip_idx: [0, 1]
+
+# Classes
+names:
+  0: hip_pelvis
+  1: hip_femour
