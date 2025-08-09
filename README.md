@@ -13,7 +13,7 @@ A collection of files from across the Internet to help researchers and developer
 </table>
 
 Currently, the dataset includes Hip Images from 3 Sources, with both X-Ray and 2D Ultrasound:
-- **Radiopedia**: with information on Graf Type, Alpha Angle, Coverage and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
+- **Radiopedia**: with information on Graf Type, Alpha Angle, Coverage, Segmentations and relavent metadata. **Released on [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode)**
 - **Hong Kong Polytechnic University**: with specific information on scan quality. **Released on [Apache V2](https://www.apache.org/licenses/LICENSE-2.0)**
 - **MTDDH**: A 1000+ image dataset of X-Ray images of the hip, with 8 landmarks for Acetabular Index and Wilberg Angle, as well as IHDI & Tonnis Grades. **Released on [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**
 
@@ -22,6 +22,7 @@ Currently, the dataset includes Hip Images from 3 Sources, with both X-Ray and 2
 We use data snapshots to highlight important features of the datasets. They can be found in the README.md files of each dataset.
 
 ![MTDDH X-Ray Data Snapshot](docs/mtddh_snapshot.png)
+![Radiopedia Data Snapshot](docs/radiopedia_snapshot.png)
 
 ## Other Datasets
 

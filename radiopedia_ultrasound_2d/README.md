@@ -6,6 +6,8 @@ Graf Class as defined by https://radiopaedia.org/articles/graf-method-for-ultras
 
 Expect some mistakes with the side label, it was done by Qwen and I'm not sure if it's correct.
 
+![Radiopedia Ultrasound Dataset Snapshot](../docs/radiopedia_snapshot.png)
+
 ### Licence
 
 The data is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, see https://radiopaedia.org/licence or https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
@@ -15,6 +17,12 @@ The data is licensed under the Creative Commons Attribution-NonCommercial-ShareA
 Files take the form 000000-X. 000000 is the patient ID, and X is the image number. Please use the json files for more useful information.
 
 **The length of the patient ID and image number may vary.**
+
+### Segmentations
+
+Segmentations are available in the `data` directory.
+
+They are in the format of `000000-X_label.png`.
 
 ### Data Point Descriptions
 
