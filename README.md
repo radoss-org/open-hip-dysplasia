@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/955042700.svg)](https://doi.org/10.5281/zenodo.15086603)
 
-A collection of files from across the Internet to help researchers and developers in the field of hip dysplasia.
+A collection of DDH Datasets from across the Internet to help researchers and developers in the field of hip dysplasia.
 
 <table>
   <tr>
