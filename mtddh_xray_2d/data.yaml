@@ -1,4 +1,4 @@
-path: /home/amcarth1/experiments/xray-experiments/
+path: /home/adam/protected-experiments/xray-experiments/
 train: yolo_datasets/MTDDH/images
 val: yolo_datasets/MTDDH/images
 

@@ -56,23 +56,6 @@ If you would like to sign the pledge, please submit a pull request with your nam
 If you use this dataset in your research, please cite the following:
 
 ```
-@dataset{openhipdysplasia,
-  author = {McArthur, Adam and Jaremko, Jacob L. and Hareendranathan, Abhilash and Burnside, Stephen and Kirby, Andrew and Scammon, Alexander and Sol, Damian},
-  title = {The Open Hip Dysplasia Dataset},
-  month = {March},
-  year = {2025},
-  version = {v1.0},
-  doi = {10.5281/zenodo.15086603},
-  url = {https://github.com/radoss-org/open-hip-dysplasia},
-  note = {Adam McArthur: University of Alberta;
-          Jacob L. Jaremko: University of Alberta;
-          Abhilash Hareendranathan: University of Alberta;
-          Stephen Burnside: University of Alberta;
-          Andrew Kirby: NHS Lothian;
-          Alexander Scammon: Insight Softmax Consulting;
-          Damian Sol: Insight Softmax Consulting;}
-}
-
 @article{9449886,
   author={Liu, Ruhan and Liu, Mengyao and Sheng, Bin and Li, Huating and Li, Ping and Song, Haitao and Zhang, Ping and Jiang, Lixin and Shen, Dinggang},
   journal={IEEE Transactions on Medical Imaging},
@@ -103,5 +86,22 @@ If you use this dataset in your research, please cite the following:
   version      = {V1},
   doi          = {10.57760/sciencedb.24372},
   url          = https://doi.org/10.57760/sciencedb.24372
+}
+
+@dataset{openhipdysplasia,
+  author = {McArthur, Adam and Jaremko, Jacob L. and Hareendranathan, Abhilash and Burnside, Stephen and Kirby, Andrew and Scammon, Alexander and Sol, Damian},
+  title = {The Open Hip Dysplasia Dataset},
+  month = {March},
+  year = {2025},
+  version = {v1.0},
+  doi = {10.5281/zenodo.15086603},
+  url = {https://github.com/radoss-org/open-hip-dysplasia},
+  note = {Adam McArthur: University of Alberta;
+          Jacob L. Jaremko: University of Alberta;
+          Abhilash Hareendranathan: University of Alberta;
+          Stephen Burnside: University of Alberta;
+          Andrew Kirby: NHS Lothian;
+          Alexander Scammon: Insight Softmax Consulting;
+          Damian Sol: Insight Softmax Consulting;}
 }
 ```
