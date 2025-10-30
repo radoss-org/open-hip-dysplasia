@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -24,15 +25,15 @@ YOLO_LABEL_PATH = YOLO_IMAGE_PATH.with_suffix(".txt")
 # --------------------------------------------
 # DATA LOADING UTILITIES
 # --------------------------------------------
-def find_metrics_files(root: Path) -> Dict[str, Path]:
-    """Return mapping of relative paths to metrics.json paths under root."""
+def find_metrics_files(root: Path) -> Tuple[Dict[str, Path], int]:
+    """Return mapping of relative paths to metrics.json paths under root and count."""
     files: Dict[str, Path] = {}
     for dirpath, _, filenames in os.walk(root):
         if "metrics.json" in filenames:
             fullpath = Path(dirpath) / "metrics.json"
             rel = os.path.relpath(fullpath, root)
             files[rel] = fullpath
-    return files
+    return files, len(files)
 
 
 def load_metrics_file(path: Path) -> Dict[str, float]:
@@ -81,8 +82,8 @@ def build_case_side_rows(
     return rows
 
 
-def build_dataframe(root: Path) -> pd.DataFrame:
-    files = find_metrics_files(root)
+def build_dataframe(root: Path) -> Tuple[pd.DataFrame, int, int]:
+    files, metrics_file_count = find_metrics_files(root)
     all_rows: List[Dict[str, object]] = []
     for rel, path in files.items():
         try:
@@ -96,7 +97,9 @@ def build_dataframe(root: Path) -> pd.DataFrame:
     for col in ["ace_index", "wiberg_index", "ihdi_grade", "tonnis_grade"]:
         if col not in df.columns:
             df[col] = np.nan
-    return df
+
+    hip_count = len(df)
+    return df, metrics_file_count, hip_count
 
 
 # --------------------------------------------
@@ -206,11 +209,21 @@ def plot_snapshot(df: pd.DataFrame, outdir: Path):
     fig, axs = plt.subplots(1, 3, figsize=(18, 6))
     fig.suptitle("MTDDH Dataset Snapshot", fontsize=16)
 
-    # A: Distributions
+    # A: Distributions - Filter Wiberg values above 80 only for this plot
     ax = axs[0]
     for col in ["ace_index", "wiberg_index"]:
         if col in df_plot.columns:
+            # Create filtered data for distribution plot
             data = df_plot[col].dropna()
+            if col == "wiberg_index":
+                data = data[data <= 80]
+                # Print information about filtered Wiberg values
+                filtered_count = len(df_plot[col].dropna()) - len(data)
+                if filtered_count > 0:
+                    print(
+                        f"Removed {filtered_count} Wiberg values > 80 from distribution plot"
+                    )
+
             mean_val = data.mean()
             std_val = data.std()
             label = f"{col} (μ={mean_val:.1f}, σ={std_val:.1f})"
@@ -218,7 +231,7 @@ def plot_snapshot(df: pd.DataFrame, outdir: Path):
     ax.set_title("Distributions")
     ax.legend()
 
-    # B: Scatter ACE vs Wiberg
+    # B: Scatter ACE vs Wiberg - Keep all Wiberg values for this plot
     ax = axs[1]
     if {"ace_index", "wiberg_index"}.issubset(df_plot.columns):
         sns.scatterplot(
@@ -239,7 +252,7 @@ def plot_snapshot(df: pd.DataFrame, outdir: Path):
     sns.countplot(data=grades_df, x="Grade", hue="Grade Type", ax=ax)
     ax.set_title("Grade Counts")
 
-    # Add exact count numbers for grades 2, 3, and 4
+    # Add exact count numbers for grades 1, 2, 3, and 4
     # Get the patches from the plot
     patches = ax.patches
     grade_types = grades_df["Grade Type"].unique()
@@ -248,9 +261,9 @@ def plot_snapshot(df: pd.DataFrame, outdir: Path):
     # Calculate the width of each bar
     bar_width = patches[0].get_width()
 
-    # Add text annotations for grades 2, 3, and 4
+    # Add text annotations for grades 1, 2, 3, and 4
     for i, grade_type in enumerate(grade_types):
-        for grade in [2, 3, 4]:
+        for grade in [1, 2, 3, 4]:
             count = df_plot[df_plot[grade_type] == grade].shape[0]
             if count > 0:
                 # Find the position for this grade and type
@@ -283,8 +296,10 @@ def main():
         raise SystemExit(f"Root directory not found: {ROOT_DIR}")
 
     print(f"Loading metrics from: {ROOT_DIR}")
-    df = build_dataframe(ROOT_DIR)
+    df, metrics_file_count, hip_count = build_dataframe(ROOT_DIR)
     print(f"Loaded {len(df)} rows and {len(df.columns)} columns.")
+    print(f"Total metrics.json files found: {metrics_file_count}")
+    print(f"Total hip count: {hip_count}")
 
     print("Creating snapshot plots...")
     plot_snapshot(df, OUTDIR)

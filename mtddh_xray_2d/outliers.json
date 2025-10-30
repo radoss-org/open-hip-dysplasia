@@ -131,5 +131,11 @@
     "dataset2_b20e2247_img",
     "dataset2_fbdae91f_img",
     "dataset2_fbdae91f_img"
+  ],
+  "Label Points Wrong Way Round": [
+    "dataset1_train_h81",
+    "dataset2_95481ad2_img",
+    "dataset2_6449bb8d_img",
+    "dataset1_train_y3"
   ]
 }

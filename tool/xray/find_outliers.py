@@ -19,6 +19,12 @@ KNOWN_OUTLIERS = {
         "dataset2_fbdae91f_img",
         "dataset2_fbdae91f_img",
     ],
+    "Label Points Wrong Way Round": [
+        "dataset1_train_h81",
+        "dataset2_95481ad2_img",
+        "dataset2_6449bb8d_img",
+        "dataset1_train_y3",
+    ],
 }
 
 FALSE_NEGATIVES = [
@@ -102,12 +108,12 @@ def find_non_ap_pelvis(data_dir):
         elif "_h" in str(label_file):
             h_files_not_horizontal.append(label_file.stem)
 
-    result = {"Known AP-Pevlis Views": [], "Missing": []}
+    result = {"Known Frog-Leg Views": [], "Missing": []}
 
     for f in horizontal_files:
         img_path = get_existing_image_path(f, data_dir)
         if img_path:
-            result["Known AP-Pevlis Views"].append(f)
+            result["Known Frog-Leg Views"].append(f)
         else:
             missing_files.append(f)
 
