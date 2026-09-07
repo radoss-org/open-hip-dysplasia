@@ -1,55 +1,75 @@
 #!/usr/bin/env python3
+"""Create a compact snapshot of the MTDDH working-set metrics."""
+
 import json
 import os
-from collections import defaultdict
+import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
-import cv2
 import matplotlib.pyplot as plt
+from matplotlib import image as mpimg
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
-# --------------------------------------------
-# CONSTANTS
-# --------------------------------------------
-ROOT_DIR = Path(
-    "/home/adam/protected-experiments/xray-experiments/retuve-data/testing-manual/"
+METRIC_COLUMNS = ("ace_index", "wiberg_index", "ihdi_grade", "tonnis_grade")
+METRIC_LABELS = {
+    "ace_index": "Acetabular Index",
+    "wiberg_index": "Wiberg Index",
+    "ihdi_grade": "International Hip Dysplasia Institute Grade",
+    "tonnis_grade": "Tönnis Grade",
+}
+LANDMARK_LABELS = {
+    "pel_l_o": "Image-left outer pelvic point",
+    "pel_l_i": "Image-left inner pelvic point",
+    "fem_l": "Image-left femur landmark",
+    "h_point_l": "Image-left H-point",
+    "pel_r_o": "Image-right outer pelvic point",
+    "pel_r_i": "Image-right inner pelvic point",
+    "fem_r": "Image-right femur landmark",
+    "h_point_r": "Image-right H-point",
+}
+LETTER_GROUPS = {
+    "a": "a",
+    "b": "b/c/w/y",
+    "c": "b/c/w/y",
+    "w": "b/c/w/y",
+    "y": "b/c/w/y",
+    "e": "e/h",
+    "h": "e/h",
+    "d": "d/l/o",
+    "l": "d/l/o",
+    "o": "d/l/o",
+}
+METRICS_ROOT = Path(
+    os.environ.get("MTDDH_METRICS_ROOT", "retuve-data/testing-manual")
 )
-OUTDIR = Path("docs")
-YOLO_IMAGE_PATH = Path("./mtddh_xray_2d/data/dataset1_train_h69.jpg")
-YOLO_LABEL_PATH = YOLO_IMAGE_PATH.with_suffix(".txt")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+IMAGE_ROOT = REPO_ROOT / "mtddh_xray_2d" / "data"
+SAMPLE_CASE = "dataset1_validation_h99"
+OUTDIR = REPO_ROOT / "docs"
+OUTPUT_NAME = "mtddh_snapshot.png"
 
 
-# --------------------------------------------
-# DATA LOADING UTILITIES
-# --------------------------------------------
-def find_metrics_files(root: Path) -> Tuple[Dict[str, Path], int]:
-    """Return mapping of relative paths to metrics.json paths under root and count."""
-    files: Dict[str, Path] = {}
-    for dirpath, _, filenames in os.walk(root):
-        if "metrics.json" in filenames:
-            fullpath = Path(dirpath) / "metrics.json"
-            rel = os.path.relpath(fullpath, root)
-            files[rel] = fullpath
-    return files, len(files)
+def load_case(path):
+    with path.open(encoding="utf-8") as stream:
+        return json.load(stream)
 
 
-def load_metrics_file(path: Path) -> Dict[str, float]:
-    """Load metrics.json, returns a flat dict: {metric_name: value}."""
-    with open(path, "r") as f:
-        data = json.load(f)
-    metrics: Dict[str, float] = {}
-    for item in data.get("metrics", []):
-        if isinstance(item, dict) and len(item) == 1:
-            key, value = next(iter(item.items()))
-            metrics[key] = value
-    return metrics
+def flatten_metrics(data):
+    return {
+        key: value
+        for item in data.get("metrics", [])
+        if isinstance(item, dict) and len(item) == 1
+        for key, value in item.items()
+    }
 
 
-def split_side_key(key: str) -> Tuple[str, Optional[str]]:
-    """Split keys like 'ace_index_left' -> ('ace_index', 'left')."""
+def load_metrics(path):
+    return flatten_metrics(load_case(path))
+
+
+def split_side_key(key):
     for side in ("left", "right"):
         suffix = f"_{side}"
         if key.endswith(suffix):
@@ -57,255 +77,249 @@ def split_side_key(key: str) -> Tuple[str, Optional[str]]:
     return key, None
 
 
-def build_case_side_rows(
-    rel_path: str, metrics: Dict[str, float]
-) -> List[Dict[str, object]]:
-    """Build one or two rows (left/right) for this case."""
-    sides_present = {
-        split_side_key(k)[1] for k in metrics if split_side_key(k)[1]
-    }
-    sides_list = sorted(sides_present) if sides_present else [None]
+def case_side_rows(path, root, metrics):
+    parsed_keys = {key: split_side_key(key) for key in metrics}
+    sides = sorted({side for _, side in parsed_keys.values() if side}) or [None]
+    rows = []
 
-    rows: List[Dict[str, object]] = []
-    folder = os.path.basename(os.path.dirname(rel_path))
-    for side in sides_list:
-        row: Dict[str, object] = {
-            "case_rel": rel_path,
-            "folder": folder,
-            "side": side if side is not None else "both",
+    for side in sides:
+        row = {
+            "case_rel": str(path.relative_to(root)),
+            "folder": path.parent.name,
+            "side": side or "both",
         }
-        for k, v in metrics.items():
-            base_key, key_side = split_side_key(k)
+        for key, value in metrics.items():
+            base_key, key_side = parsed_keys[key]
             if key_side is None or key_side == side:
-                row[base_key] = v
+                row[base_key] = value
         rows.append(row)
     return rows
 
 
-def build_dataframe(root: Path) -> Tuple[pd.DataFrame, int, int]:
-    files, metrics_file_count = find_metrics_files(root)
-    all_rows: List[Dict[str, object]] = []
-    for rel, path in files.items():
+def build_dataframe(root):
+    paths = sorted(root.rglob("metrics.json"))
+    rows = []
+    for path in paths:
         try:
-            m = load_metrics_file(path)
-            rows = build_case_side_rows(rel, m)
-            all_rows.extend(rows)
-        except Exception as e:
-            print(f"Warning: failed to load {path}: {e}")
+            rows.extend(case_side_rows(path, root, load_metrics(path)))
+        except Exception as error:
+            print(f"Warning: failed to load {path}: {error}")
 
-    df = pd.DataFrame(all_rows)
-    for col in ["ace_index", "wiberg_index", "ihdi_grade", "tonnis_grade"]:
-        if col not in df.columns:
-            df[col] = np.nan
-
-    hip_count = len(df)
-    return df, metrics_file_count, hip_count
+    df = pd.DataFrame(rows)
+    for column in METRIC_COLUMNS:
+        if column not in df:
+            df[column] = np.nan
+    return df, len(paths)
 
 
-# --------------------------------------------
-# YOLO VISUALIZATION UTILITIES
-# --------------------------------------------
-def load_yolo_pose_label(label_path: Path):
-    poses = []
-    with open(label_path, "r") as f:
-        for line in f:
-            parts = line.strip().split()
-            if len(parts) < 6:
-                continue
-            cls, xc, yc, w, h = int(parts[0]), *map(float, parts[1:5])
-            keypoints = []
-            for i in range(5, len(parts), 3):
-                try:
-                    keypoints.append(
-                        (
-                            float(parts[i]),
-                            float(parts[i + 1]),
-                            int(float(parts[i + 2])),
-                        )
-                    )
-                except IndexError:
-                    break
-            poses.append((cls, xc, yc, w, h, keypoints))
-    return poses
+def load_sample(root):
+    metrics_path = root / SAMPLE_CASE / "metrics.json"
+    raw_path = IMAGE_ROOT / f"{SAMPLE_CASE}.jpg"
+    output_path = root / SAMPLE_CASE / "img.jpg"
+    if not metrics_path.exists():
+        return None, None, None
+    return (
+        mpimg.imread(raw_path) if raw_path.exists() else None,
+        mpimg.imread(output_path) if output_path.exists() else None,
+        load_case(metrics_path),
+    )
 
 
-def draw_yolo_pose_on_ax(ax, image_path: Path, label_path: Path):
-    """Draws a YOLO pose visualization directly onto a Matplotlib axis."""
-    image = cv2.imread(str(image_path))
+def plot_image(ax, image, title):
     if image is None:
-        ax.text(0.5, 0.5, "Image not found", ha="center", va="center")
+        ax.text(0.5, 0.5, f"{SAMPLE_CASE} not available", ha="center", va="center")
         ax.axis("off")
         return
 
-    h, w = image.shape[:2]
-    poses = load_yolo_pose_label(label_path)
-
-    for cls, xc, yc, bw, bh, keypoints in poses:
-        x1, y1 = int((xc - bw / 2) * w), int((yc - bh / 2) * h)
-        x2, y2 = int((xc + bw / 2) * w), int((yc + bh / 2) * h)
-        color = (0, 255, 0)
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
-        cv2.putText(
-            image,
-            f"class {cls}",
-            (x1, y1 - 5),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.5,
-            color,
-            1,
-        )
-
-        for idx, (xk, yk, vk) in enumerate(keypoints):
-            if vk == 0:
-                continue
-            px, py = int(xk * w), int(yk * h)
-            color = (0, 0, 255) if vk == 1 else (255, 0, 0)
-            cv2.circle(image, (px, py), 3, color, -1)
-            cv2.putText(
-                image,
-                str(idx),
-                (px + 5, py - 5),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.4,
-                (255, 255, 255),
-                1,
-            )
-
-    ax.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    ax.imshow(image, cmap="gray")
+    ax.set_title(title)
     ax.axis("off")
 
 
-# --------------------------------------------
-# SNAPSHOT PLOTTING
-# --------------------------------------------
-def ensure_outdir(path: Path):
-    path.mkdir(parents=True, exist_ok=True)
+def plot_landmarks(ax, image, landmarks):
+    plot_image(ax, image, f"Retuve landmarks (image direction): {SAMPLE_CASE}")
+    if image is None or not landmarks:
+        return
+
+    for side, x, ha in (("l", 0.02, "left"), ("r", 0.98, "right")):
+        names = [
+            name
+            for name in LANDMARK_LABELS
+            if f"_{side}_" in name or name.endswith(f"_{side}")
+        ]
+        for y_fraction, name in zip((0.16, 0.36, 0.56, 0.76), names):
+            point = landmarks.get(name)
+            if not point:
+                continue
+            point_x, point_y = point
+            color = "#ff3b30" if side == "l" else "#1683ff"
+            ax.scatter(
+                point_x,
+                point_y,
+                s=28,
+                c=color,
+                edgecolors="white",
+                linewidths=0.8,
+                zorder=3,
+            )
+            ax.annotate(
+                LANDMARK_LABELS[name],
+                xy=(point_x, point_y),
+                xycoords="data",
+                xytext=(x, y_fraction),
+                textcoords=ax.transAxes,
+                ha=ha,
+                va="center",
+                color="white",
+                fontsize=8,
+                weight="bold",
+                bbox={
+                    "boxstyle": "round,pad=0.25",
+                    "facecolor": "black",
+                    "edgecolor": color,
+                    "alpha": 0.82,
+                },
+                arrowprops={"arrowstyle": "-", "color": color, "lw": 1.0},
+                annotation_clip=False,
+                zorder=4,
+            )
 
 
-def plot_snapshot(df: pd.DataFrame, outdir: Path):
-    ensure_outdir(outdir)
-
-    # Feature engineering for plots
-    tokens = df["folder"].astype(str).str.split("_", expand=True)
-    df["folder_group_letter"] = (
-        tokens[tokens.columns[-1]]
-        .astype(str)
-        .str.extract(r"([A-Za-z])", expand=False)
+def plot_letter_confusion(ax, df):
+    cases = df[df["folder"].str.startswith("dataset1_")].groupby("folder")[
+        "ihdi_grade"
+    ].max().reset_index()
+    cases["letter"] = (
+        cases["folder"].str.rsplit("_", n=1).str[-1]
+        .str.extract(r"([A-Za-z])\d*$", expand=False)
         .str.lower()
     )
-    df_plot = df[~df["folder_group_letter"].isin(["i", "z"])]
+    cases = cases.dropna(subset=["letter"])
+    cases["letter_group"] = cases["letter"].map(LETTER_GROUPS)
+    matrix = pd.crosstab(cases["letter_group"], cases["ihdi_grade"])
+    matrix = matrix.reindex(
+        index=list(dict.fromkeys(LETTER_GROUPS.values())), fill_value=0
+    )
+    matrix = matrix.reindex(columns=[1, 2, 3, 4], fill_value=0).astype(int)
+    sns.heatmap(
+        matrix,
+        annot=True,
+        annot_kws={"fontsize": 14, "fontweight": "bold"},
+        fmt="d",
+        cmap="Blues",
+        cbar=False,
+        ax=ax,
+    )
+    ax.set_title("Dataset 1 Letter Groups vs IHDI Grade")
+    ax.set_xlabel("International Hip Dysplasia Institute Grade (max hip grade)")
+    ax.set_ylabel("Dataset 1 letter group")
 
-    # Identify and print files with ace_index over 80
-    high_ace_indices = df_plot[df_plot["ace_index"] > 80]
-    if not high_ace_indices.empty:
-        print("Files with ace_index > 80 (removed from plot):")
-        for _, row in high_ace_indices.iterrows():
-            print(
-                f"- {row['case_rel']} (side: {row['side']}, ACE: {row['ace_index']})"
-            )
-    df_plot = df_plot[df_plot["ace_index"] <= 80]
 
-    # Main plot generation
-    fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+def plot_snapshot(df, outdir):
+    outdir.mkdir(parents=True, exist_ok=True)
+    all_df = df.copy()
+
+    high_ace = df[df["ace_index"] > 80]
+    if not high_ace.empty:
+        print("Files with ace_index > 80 (removed from plots):")
+        for _, row in high_ace.iterrows():
+            print(f"- {row['case_rel']} (side: {row['side']}, ACE: {row['ace_index']})")
+
+    df = df[df["ace_index"] <= 80].copy()
+    fig, axes = plt.subplots(2, 3, figsize=(18, 12))
     fig.suptitle("MTDDH Dataset Snapshot", fontsize=16)
+    axes[0, 0].set_title("Distributions")
 
-    # A: Distributions - Filter Wiberg values above 80 only for this plot
-    ax = axs[0]
-    for col in ["ace_index", "wiberg_index"]:
-        if col in df_plot.columns:
-            # Create filtered data for distribution plot
-            data = df_plot[col].dropna()
-            if col == "wiberg_index":
-                data = data[data <= 80]
-                # Print information about filtered Wiberg values
-                filtered_count = len(df_plot[col].dropna()) - len(data)
-                if filtered_count > 0:
-                    print(
-                        f"Removed {filtered_count} Wiberg values > 80 from distribution plot"
-                    )
-
-            mean_val = data.mean()
-            std_val = data.std()
-            label = f"{col} (μ={mean_val:.1f}, σ={std_val:.1f})"
-            sns.kdeplot(data, ax=ax, fill=True, alpha=0.3, label=label)
-    ax.set_title("Distributions")
-    ax.legend()
-
-    # B: Scatter ACE vs Wiberg - Keep all Wiberg values for this plot
-    ax = axs[1]
-    if {"ace_index", "wiberg_index"}.issubset(df_plot.columns):
-        sns.scatterplot(
-            data=df_plot,
-            x="ace_index",
-            y="wiberg_index",
-            hue="ihdi_grade",
-            ax=ax,
-            s=30,
+    for column, limit in (("ace_index", 60), ("wiberg_index", 60)):
+        data = df[column].dropna()
+        if limit is not None:
+            filtered = data[data <= limit]
+            if len(filtered) != len(data):
+                print(
+                    f"Removed {len(data) - len(filtered)} "
+                    f"{column} values > {limit} from distribution plot"
+                )
+            data = filtered
+        sns.kdeplot(
+            data,
+            ax=axes[0, 0],
+            fill=True,
+            alpha=0.3,
+            label=f"{METRIC_LABELS[column]} (μ={data.mean():.1f}, σ={data.std():.1f})",
         )
-        ax.set_title("ACE vs Wiberg Index")
+    axes[0, 0].set_xlabel("Metric value")
+    axes[0, 0].set_xlim(right=60)
+    axes[0, 0].legend(loc="upper right")
 
-    # C: Grade Counts
-    ax = axs[2]
-    grades_df = df_plot[["ihdi_grade", "tonnis_grade"]].melt(
+    scatter_limit = 100
+    scatter_df = df[df["wiberg_index"] <= scatter_limit]
+    if len(scatter_df) != len(df):
+        print(
+            f"Removed {len(df) - len(scatter_df)} rows with "
+            f"{METRIC_LABELS['wiberg_index']} > {scatter_limit} "
+            "from scatter plot"
+        )
+    sns.scatterplot(
+        data=scatter_df,
+        x="ace_index",
+        y="wiberg_index",
+        hue="ihdi_grade",
+        ax=axes[0, 1],
+        s=30,
+    )
+    axes[0, 1].set_title("Acetabular Index vs Wiberg Index")
+    axes[0, 1].set_xlabel(METRIC_LABELS["ace_index"])
+    axes[0, 1].set_ylabel(METRIC_LABELS["wiberg_index"])
+    axes[0, 1].set_ylim(0, scatter_limit)
+    axes[0, 1].legend(loc="upper left", title="IHDI Grade")
+
+    grades = df[["ihdi_grade", "tonnis_grade"]].melt(
         var_name="Grade Type", value_name="Grade"
     )
-    sns.countplot(data=grades_df, x="Grade", hue="Grade Type", ax=ax)
-    ax.set_title("Grade Counts")
+    grades["Grade Type"] = grades["Grade Type"].map(METRIC_LABELS)
+    sns.countplot(data=grades, x="Grade", hue="Grade Type", ax=axes[0, 2])
+    axes[0, 2].set_title("Hip Grade Counts")
+    for container in axes[0, 2].containers:
+        labels = [
+            str(int(bar.get_height())) if bar.get_height() else ""
+            for bar in container
+        ]
+        axes[0, 2].bar_label(
+            container,
+            labels=labels,
+            padding=3,
+            fontsize=14,
+            fontweight="bold",
+        )
 
-    # Add exact count numbers for grades 1, 2, 3, and 4
-    # Get the patches from the plot
-    patches = ax.patches
-    grade_types = grades_df["Grade Type"].unique()
-    grades = sorted(grades_df["Grade"].unique())
+    image, output_image, sample = load_sample(METRICS_ROOT)
+    landmarks = sample.get("landmarks") if sample else None
+    plot_landmarks(axes[1, 0], image, landmarks)
+    plot_image(
+        axes[1, 1],
+        output_image,
+        f"Example Retuve output (.jpg): {SAMPLE_CASE}",
+    )
+    plot_letter_confusion(axes[1, 2], all_df)
 
-    # Calculate the width of each bar
-    bar_width = patches[0].get_width()
-
-    # Add text annotations for grades 1, 2, 3, and 4
-    for i, grade_type in enumerate(grade_types):
-        for grade in [1, 2, 3, 4]:
-            count = df_plot[df_plot[grade_type] == grade].shape[0]
-            if count > 0:
-                # Find the position for this grade and type
-                grade_idx = grades.index(grade)
-                x_pos = (
-                    grade_idx
-                    - (len(grade_types) - 1) * bar_width / 2
-                    + i * bar_width
-                )
-
-                ax.text(
-                    x_pos,
-                    count + 0.5,
-                    str(count),
-                    ha="center",
-                    va="bottom",
-                    color="black",
-                )
-
-    plt.tight_layout(rect=[0, 0, 0.95, 0.95])
-    plt.savefig(outdir / "mtddh_snapshot_new.png", dpi=250)
-    plt.close()
+    fig.tight_layout(rect=[0, 0, 0.95, 0.95])
+    fig.savefig(outdir / OUTPUT_NAME, dpi=250)
+    plt.close(fig)
 
 
-# --------------------------------------------
-# MAIN EXECUTION
-# --------------------------------------------
 def main():
-    if not ROOT_DIR.exists():
-        raise SystemExit(f"Root directory not found: {ROOT_DIR}")
+    if not METRICS_ROOT.is_dir():
+        raise SystemExit(
+            f"Metrics directory not found: {METRICS_ROOT}. "
+            "Set MTDDH_METRICS_ROOT to the directory containing metrics.json files."
+        )
 
-    print(f"Loading metrics from: {ROOT_DIR}")
-    df, metrics_file_count, hip_count = build_dataframe(ROOT_DIR)
-    print(f"Loaded {len(df)} rows and {len(df.columns)} columns.")
+    print(f"Loading metrics from: {METRICS_ROOT}")
+    df, metrics_file_count = build_dataframe(METRICS_ROOT)
+    print(f"Loaded {len(df)} hip rows and {len(df.columns)} columns.")
     print(f"Total metrics.json files found: {metrics_file_count}")
-    print(f"Total hip count: {hip_count}")
-
-    print("Creating snapshot plots...")
     plot_snapshot(df, OUTDIR)
-    print(f"Snapshot saved under: {OUTDIR}")
-
-    print("Done.")
+    print(f"Snapshot saved to: {OUTDIR / OUTPUT_NAME}")
 
 
 if __name__ == "__main__":

@@ -93,6 +93,43 @@ def load_dataset_info():
     return dataset
 
 
+def plot_observed_counts(ax, series, title, xlabel, colors, log_y=False):
+    counts = pd.concat(
+        {label: values.value_counts() for label, values in series.items()}, axis=1
+    ).fillna(0).sort_index()
+    positions = np.arange(len(counts))
+    width = 0.8 / len(series)
+
+    for index, (label, color) in enumerate(colors.items()):
+        offset = (index - (len(series) - 1) / 2) * width
+        bars = ax.bar(
+            positions + offset,
+            counts[label],
+            width=width,
+            label=label if len(series) > 1 else None,
+            color=color,
+            alpha=0.7,
+            edgecolor="black",
+        )
+        ax.bar_label(
+            bars,
+            labels=[str(int(value)) if value else "" for value in counts[label]],
+            padding=3,
+            fontsize=9,
+        )
+
+    ax.set_xticks(positions, [f"{value:g}" for value in counts.index])
+    ax.set_title(title, fontweight="bold", fontsize=14)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("Count")
+    if log_y:
+        ax.set_yscale("log")
+        ax.set_ylim(bottom=0.8)
+    if len(series) > 1:
+        ax.legend()
+    ax.grid(True, alpha=0.3)
+
+
 def create_snapshot():
     """Create simplified dataset snapshot with specific requested elements"""
     # Load dataset
@@ -153,39 +190,26 @@ def create_snapshot():
     # 2. Age Distribution
     ax2 = plt.subplot(2, 3, 2)
     valid_ages = df["Age_months"].dropna()
-    plt.hist(
-        valid_ages, bins=20, alpha=0.7, color="skyblue", edgecolor="black"
+    plot_observed_counts(
+        ax2,
+        {"Images": valid_ages.round(2)},
+        "Age Distribution",
+        "Age (months)",
+        {"Images": "skyblue"},
     )
-    plt.title("Age Distribution", fontweight="bold", fontsize=14)
-    plt.xlabel("Age (months)")
-    plt.ylabel("Count")
-    plt.grid(True, alpha=0.3)
 
     # 3. Alpha Angle Distribution (Combined)
     ax3 = plt.subplot(2, 3, 3)
     alpha_r = df["Alpha_Angle_R_num"].dropna()
     alpha_l = df["Alpha_Angle_L_num"].dropna()
-    plt.hist(
-        alpha_r,
-        bins=15,
-        alpha=0.6,
-        label="Right Hip",
-        color="blue",
-        edgecolor="black",
+    plot_observed_counts(
+        ax3,
+        {"Right Hip": alpha_r, "Left Hip": alpha_l},
+        "Alpha Angle Distribution",
+        "Alpha Angle (degrees)",
+        {"Right Hip": "blue", "Left Hip": "red"},
+        log_y=True,
     )
-    plt.hist(
-        alpha_l,
-        bins=15,
-        alpha=0.6,
-        label="Left Hip",
-        color="red",
-        edgecolor="black",
-    )
-    plt.title("Alpha Angle Distribution", fontweight="bold", fontsize=14)
-    plt.xlabel("Alpha Angle (degrees)")
-    plt.ylabel("Count")
-    plt.legend()
-    plt.grid(True, alpha=0.3)
 
     # 4. Graf Type Distribution (Correct Side Only)
     ax4 = plt.subplot(2, 3, 4)
@@ -198,46 +222,35 @@ def create_snapshot():
             graf_correct_side.append(row["L Graf Type"])
 
     graf_counts = pd.Series(graf_correct_side).value_counts()
-    plt.bar(
+    ax4.bar(
         graf_counts.index,
         graf_counts.values,
+        width=0.9,
         color="lightgreen",
         alpha=0.7,
         edgecolor="black",
     )
-    plt.title(
+    ax4.set_title(
         "Graf Type Distribution (Correct Side)", fontweight="bold", fontsize=14
     )
-    plt.xlabel("Graf Type")
-    plt.ylabel("Count")
-    plt.xticks(rotation=45)
+    ax4.set_xlabel("Graf Type")
+    ax4.set_ylabel("Count")
+    ax4.set_xticks(range(len(graf_counts)), graf_counts.index, rotation=45)
+    ax4.set_yscale("log")
+    ax4.set_ylim(bottom=0.8)
     plt.grid(True, alpha=0.3)
 
     # 5. Beta Angle Distribution (Combined)
     ax5 = plt.subplot(2, 3, 5)
     beta_r = df["Beta_Angle_R_num"].dropna()
     beta_l = df["Beta_Angle_L_num"].dropna()
-    plt.hist(
-        beta_r,
-        bins=15,
-        alpha=0.6,
-        label="Right Hip",
-        color="green",
-        edgecolor="black",
+    plot_observed_counts(
+        ax5,
+        {"Right Hip": beta_r, "Left Hip": beta_l},
+        "Beta Angle Distribution",
+        "Beta Angle (degrees)",
+        {"Right Hip": "green", "Left Hip": "orange"},
     )
-    plt.hist(
-        beta_l,
-        bins=15,
-        alpha=0.6,
-        label="Left Hip",
-        color="orange",
-        edgecolor="black",
-    )
-    plt.title("Beta Angle Distribution", fontweight="bold", fontsize=14)
-    plt.xlabel("Beta Angle (degrees)")
-    plt.ylabel("Count")
-    plt.legend()
-    plt.grid(True, alpha=0.3)
 
     # 6. Dataset Summary
     ax6 = plt.subplot(2, 3, 6)
@@ -292,8 +305,8 @@ Breech: {(~df['Breech?'].isna()).sum()/total_images*100:.1f}%
         bbox=dict(boxstyle="round,pad=0.5", facecolor="lightgray", alpha=0.8),
     )
 
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.90, hspace=0.3, wspace=0.3)
+    plt.tight_layout(pad=0.5)
+    plt.subplots_adjust(top=0.90, hspace=0.15, wspace=0.18)
 
     # Save the plot
     output_path = "./docs/radiopedia_snapshot.png"

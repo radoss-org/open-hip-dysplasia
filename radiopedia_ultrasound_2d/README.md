@@ -55,25 +55,148 @@ Attribution is tied to the number in the file name.
 
 The DICOMs and NIFTIs use the same pattern to keep attribution clear.
 
-| Image | Case Courtesy of | Radiopaedia.org rID | URL |
-|-------|------------------|---------------------|-----|
-| 72628_X.png | Yusra Sheikh | 72628 | [Link](https://radiopaedia.org/cases/72628) |
-| 172535_X.png | Ryan Thibodeau | 172535 | [Link](https://radiopaedia.org/cases/172535) |
-| 172536_X.png | Ryan Thibodeau | 172536 | [Link](https://radiopaedia.org/cases/172536) |
-| 172658_X.png | Ryan Thibodeau | 172658 | [Link](https://radiopaedia.org/cases/172658) |
-| 172534_X.png | Ryan Thibodeau | 172534 | [Link](https://radiopaedia.org/cases/172534) |
-| 171555_X.png | Ryan Thibodeau | 171555 | [Link](https://radiopaedia.org/cases/171555) |
-| 171556_X.png | Ryan Thibodeau | 171556 | [Link](https://radiopaedia.org/cases/171556) |
-| 172533_X.png | Ryan Thibodeau | 172533 | [Link](https://radiopaedia.org/cases/172533) |
-| 171551_X.png | Ryan Thibodeau | 171551 | [Link](https://radiopaedia.org/cases/171551) |
-| 171553_X.png | Ryan Thibodeau | 171553 | [Link](https://radiopaedia.org/cases/171553) |
-| 171554_X.png | Ryan Thibodeau | 171554 | [Link](https://radiopaedia.org/cases/171554) |
-| 167854_X.png | Ashesh Ishwarlal Ranchod | 167854 | [Link](https://radiopaedia.org/cases/167854) |
-| 167855_X.png | Ashesh Ishwarlal Ranchod | 167855 | [Link](https://radiopaedia.org/cases/167855) |
-| 167857_X.png | Ashesh Ishwarlal Ranchod | 167857 | [Link](https://radiopaedia.org/cases/167857) |
-| 56568_X.png | Hisham Alwakkaa | 56568 | [Link](https://radiopaedia.org/cases/56568) |
+### Case Citations
+
+Each scan has an individual BibTeX citation. The `note` field identifies the
+corresponding local image file.
+
+```bibtex
+@misc{radiopaedia_72628,
+  author = {Sheikh, Yusra},
+  title = {Developmental dysplasia of the hip - Graf type IV},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-72628},
+  url = {https://radiopaedia.org/cases/72628},
+  note = {Accessed on 11 Jun 2026; image: 72628_X.png}
+}
+
+@misc{radiopaedia_172535,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 2-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-172535},
+  url = {https://radiopaedia.org/cases/172535},
+  note = {Accessed on 11 Jun 2026; image: 172535_X.png}
+}
+
+@misc{radiopaedia_172536,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 2-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-172536},
+  url = {https://radiopaedia.org/cases/172536},
+  note = {Accessed on 11 Jun 2026; image: 172536_X.png}
+}
+
+@misc{radiopaedia_172658,
+  author = {Thibodeau, Ryan},
+  title = {Developmental dysplasia of the hip},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-172658},
+  url = {https://radiopaedia.org/cases/172658},
+  note = {Accessed on 11 Jun 2026; image: 172658_X.png}
+}
+
+@misc{radiopaedia_172534,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 2-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-172534},
+  url = {https://radiopaedia.org/cases/172534},
+  note = {Accessed on 11 Jun 2026; image: 172534_X.png}
+}
+
+@misc{radiopaedia_171555,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 1-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-171555},
+  url = {https://radiopaedia.org/cases/171555},
+  note = {Accessed on 11 Jun 2026; image: 171555_X.png}
+}
+
+@misc{radiopaedia_171556,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 4-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-171556},
+  url = {https://radiopaedia.org/cases/171556},
+  note = {Accessed on 11 Jun 2026; image: 171556_X.png}
+}
+
+@misc{radiopaedia_172533,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 1-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-172533},
+  url = {https://radiopaedia.org/cases/172533},
+  note = {Accessed on 11 Jun 2026; image: 172533_X.png}
+}
+
+@misc{radiopaedia_171551,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 4-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-171551},
+  url = {https://radiopaedia.org/cases/171551},
+  note = {Accessed on 11 Jun 2026; image: 171551_X.png}
+}
+
+@misc{radiopaedia_171553,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 1-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-171553},
+  url = {https://radiopaedia.org/cases/171553},
+  note = {Accessed on 11 Jun 2026; image: 171553_X.png}
+}
+
+@misc{radiopaedia_171554,
+  author = {Thibodeau, Ryan},
+  title = {Normal hip ultrasound - 2-month-old},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-171554},
+  url = {https://radiopaedia.org/cases/171554},
+  note = {Accessed on 11 Jun 2026; image: 171554_X.png}
+}
+
+@misc{radiopaedia_167854,
+  author = {Ranchod, Ashesh Ishwarlal},
+  title = {Developmental dysplasia of the hip - Graf type IIa},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-167854},
+  url = {https://radiopaedia.org/cases/167854},
+  note = {Accessed on 11 Jun 2026; image: 167854_X.png}
+}
+
+@misc{radiopaedia_167855,
+  author = {Ranchod, Ashesh Ishwarlal},
+  title = {Developmental dysplasia of the hip - Graf type Ib},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-167855},
+  url = {https://radiopaedia.org/cases/167855},
+  note = {Accessed on 11 Jun 2026; image: 167855_X.png}
+}
+
+@misc{radiopaedia_167857,
+  author = {Ranchod, Ashesh Ishwarlal},
+  title = {Developmental dysplasia of the hip - Graf type Ia},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-167857},
+  url = {https://radiopaedia.org/cases/167857},
+  note = {Accessed on 11 Jun 2026; image: 167857_X.png}
+}
+
+@misc{radiopaedia_56568,
+  author = {Alwakkaa, Hisham},
+  title = {Developmental dysplasia of the hips - bilateral Graf type IIa},
+  howpublished = {Case study, Radiopaedia.org},
+  doi = {10.53347/rID-56568},
+  url = {https://radiopaedia.org/cases/56568},
+  note = {Accessed on 11 Jun 2026; image: 56568_X.png}
+}
+```
 
 ### Attribution Format
 
 Case courtesy of Name from https://radiopaedia.org rID [Radiopaedia ID] (https://radiopaedia.org/cases/rID)
-

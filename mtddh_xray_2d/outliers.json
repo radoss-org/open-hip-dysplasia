@@ -122,7 +122,6 @@
     "dataset2_e977cf36_img",
     "dataset2_f68ab7a6_img",
     "dataset2_8dd741ed_img",
-    "dataset2_e977cf36_img",
     "dataset2_6d4ff308_img",
     "dataset2_f3e8f7f8_img",
     "dataset2_5bb4943f_img",
@@ -130,12 +129,16 @@
     "dataset2_aecbeb0b_img",
     "dataset2_b20e2247_img",
     "dataset2_fbdae91f_img",
-    "dataset2_fbdae91f_img"
+    "dataset2_150a5599_img",
+    "dataset2_76aec341_img",
+    "dataset2_ea1a9d11_img"
   ],
   "Label Points Wrong Way Round": [
-    "dataset1_train_h81",
     "dataset2_95481ad2_img",
     "dataset2_6449bb8d_img",
     "dataset1_train_y3"
+  ],
+  "Lots of Ortho Implants": [
+    "dataset2_3822237b_img"
   ]
 }

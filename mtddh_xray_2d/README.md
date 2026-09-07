@@ -35,23 +35,65 @@ We found that only one file could not be processed in Dataset 2, leaving 905 Ima
 
 ## Data Split
 
-A further 51 were removed for failing further processing before creating the split. Both datasets were randomly split and merged together to leave 1827 images in the split.
+A further 51 were removed for failing further processing before creating the split. Both datasets were randomly split and merged together to leave 1827 images in the working set.
+
+The working set was stratified by IHDI grade, using the higher grade from the two hips, and split at the image level into 40% training (731 images), 20% validation (365), and 40% test (731). The released files do not contain patient identifiers or visit linkage, so patient-level splitting cannot be verified.
+
+Only the training split is oversampled for grades 2–4. The split file records the 731 original training IDs; generated YOLO training directories contain 1109 files after adding 378 oversampled copies.
 
 This split can be found in `mtddh_xray_2d/dataset_splits.json`
 
-We report 3 different types of outliers for exclusion:
-- Non AP Pevlis Views (111)
-- Older than 40 Months (2)
-- Wrong Body Part (13)
+The snapshot generator reads the 1827-case working-set metrics from `MTDDH_METRICS_ROOT` (default: `retuve-data/testing-manual`) and writes `docs/mtddh_snapshot.png`.
+
+## Outliers
+
+The outlier metadata contains:
+- Known Frog-Leg Views (111)
+- Old (2)
+- Wrong Body Part (14)
+- Label Points Wrong Way Round (3)
+- Lots of Ortho Implants (1)
+- Missing (0)
+
+These cases remain in the source dataset and split files. For final internal test analysis, 52 test images were excluded: 40 frog-leg views, 10 wrong-body-part images, 1 image with reversed label points, and 1 image with extensive orthopaedic implants.
 
 These outliers can be found in `mtddh_xray_2d/outliers.json`
 
 ## Visualising Keypoints
 
-We have created a simple script to
+The snapshot script includes metric distributions, a full-name,
+image-direction-aware landmark visualization, an example Retuve `.jpg` output
+with its measurement lines, and a grouped Dataset 1 letter-grade versus
+maximum-IHDI-grade confusion matrix. Run it from `env/open-hip-dysplasia` with:
+
+```bash
+MTDDH_METRICS_ROOT=../xray-experiments/retuve-data/testing-manual \
+  python tool/create_mtddh_snapshot.py
+```
+
+The example is `dataset1_validation_h99`, a standard view with left/right IHDI
+grades 1 and 4.
+
+The confusion-matrix rows combine `b/c/w/y`, `e/h`, and `d/l/o`; `a` remains
+separate.
 
 ## Licence
 
 The data is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, see https://creativecommons.org/licenses/by/4.0/.
+
+## Citation
+
+```bibtex
+@misc{c088644bd0b2406eb49830ad447c17fb,
+  author       = {Guoqiang Qi and Xiongfei Jiao and Jing Li and Chaojin Qin and Xinxin Li and Zhexian Sun and Yonggen Zhao and Renjie Jiang and Zhu Zhu and Guoqiang Zhao and Gang Yu},
+  title        = {{The MTDDH dataset for quality evaluation of pelvic X-ray and diagnosis of developmental dysplasia of the hip}},
+  year         = 2025,
+  month        = apr,
+  publisher    = {Science Data Bank},
+  version      = {V1},
+  doi          = {10.57760/sciencedb.24372},
+  url          = {https://doi.org/10.57760/sciencedb.24372}
+}
+```
 
 ![](../docs/mtddh_snapshot.png)
